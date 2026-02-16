@@ -112,7 +112,7 @@ if uploaded_file is not None:
             st.download_button(
                 label="⬇️ ดาวน์โหลดไฟล์ CSV",
                 data=csv_buffer,
-                file_name="converted_data.csv",
+                file_name="ข้อมูลทะเบียน.csv",
                 mime="text/csv",
             )
         else:
@@ -120,3 +120,4 @@ if uploaded_file is not None:
             
     except Exception as e:
         st.error(f"เกิดข้อผิดพลาด: {e}")
+
