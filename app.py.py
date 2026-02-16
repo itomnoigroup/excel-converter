@@ -48,7 +48,6 @@ if uploaded_file is not None:
             df['ทะเบียน'] = df['ทะเบียน'].str.strip()
             
             # 3. เปลี่ยนค่าที่เป็น 'nan', ค่าว่าง '', หรือขีด '-' ให้เป็น Null ของจริง
-            # (ต้องดักคำว่า 'nan' ที่เกิดจากการแปลง astype(str) ด้วย)
             invalid_values = ['nan', 'NaN', '', '-', 'None']
             df = df[~df['ทะเบียน'].isin(invalid_values)]
             
@@ -75,13 +74,28 @@ if uploaded_file is not None:
         
         # 2. ส่วนเลือกคอลัมน์ (Column Selector)
         all_columns = df.columns.tolist()
+        
+        # คำนวณคอลัมน์มาตรฐาน
         default_selection = [col for col in target_columns if col in all_columns]
         
         st.subheader("เลือกคอลัมน์ที่ต้องการ:")
+        
+        # [NEW] เพิ่ม Checkbox เลือกทั้งหมด
+        select_all = st.checkbox("✅ เลือกทั้งหมด (Select All)")
+        
+        # ถ้าติ๊กเลือกทั้งหมด ให้ใช้ all_columns ถ้าไม่ติ๊ก ให้ใช้ default_selection
+        if select_all:
+            final_selection = all_columns
+        else:
+            final_selection = default_selection
+
+        # แสดง Multiselect
+        # key=f"select_{select_all}" เป็นทริคเพื่อให้กล่องรีเซ็ตค่าใหม่ทันทีที่เรากดติ๊กเลือกทั้งหมด
         selected_columns = st.multiselect(
-            "ตรวจสอบรายชื่อคอลัมน์ (ระบบเลือกให้แล้ว)",
+            "จิ้มเพื่อเพิ่ม/ลดคอลัมน์:",
             options=all_columns,
-            default=default_selection
+            default=final_selection,
+            key=f"select_{select_all}" 
         )
 
         if selected_columns:
